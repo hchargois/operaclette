@@ -1,0 +1,3 @@
+<div ng-if="prdet">
+	<a popover="{{ prdet.zones.join(', ') || 'Placement inconnu' }}" popover-title="{{ prdet.category }}" popover-trigger="mouseenter" class="btn btn-default btn-xs" href="{{ url }}" target="_blank">{{ prdet.price }} €</a>
+</div>

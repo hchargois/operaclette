@@ -1,0 +1,9 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.representations-table tr td {
+	padding-right: 1em;
+}
+
+input[type=number] {
+	width: 5em;
+}

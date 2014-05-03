@@ -1,0 +1,63 @@
+<div class="col-sm-3">
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckballet">Ballets</label>
+	</div>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckopera">Opéras</label>
+	</div>
+	<hr>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckbastille">Opéra Bastille</label>
+	</div>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckgarnier">Palais Garnier</label>
+	</div>
+	<hr>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckfuture">Spectacles actuels et futurs</label>
+	</div>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckpast">Spectacles passés</label>
+	</div>
+	<hr>
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="ckdispo">Disponibles uniquement</label>
+	</div>
+	<div>
+		Entre <input ng-disabled="!ckdispo" type="number" ng-model="filterpricelow" step=10 min=0 max="{{ filterpricehigh }}"> et <input ng-disabled="!ckdispo" type="number" ng-model="filterpricehigh" step=10 min="{{ filterpricelow }}" max=400> €
+	</div>
+</div>
+<div class="col-sm-9">
+	<div><p><ng-pluralize count="filteredSpectacles.length" when="{'0': 'Aucun spectacle', 'one':'1 spectacle', 'other': '{} spectacles'}"></ng-pluralize> correspondant aux critères de recherche</p></div>
+	<div class="panel-group" id="accordion">
+		<div ng-repeat="spectacle in filteredSpectacles = (spectacles | filter:filterMatch)">
+			<div class="panel panel-default spectacle">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ spectacle.$$hashKey }}">
+							{{ spectacle.name }}
+						</a>
+					</h4>
+				</div>
+				<div id="collapse{{ spectacle.$$hashKey }}" class="panel-collapse collapse">
+					<div class="panel-body">
+						<a href="{{ spectacle.url }}" target="_blank">Du {{ spectacle.first_representation | date:'fullDate' }} au {{ spectacle.last_representation | date:'fullDate' }}</a>
+						<p ng-if="spectacle.prices_available.length > 0">Places disponibles : {{ spectacle.prices_available.join(", ") }} €</p>
+						<p ng-if="spectacle.prices_available.length == 0">Pas de places disponibles à la vente.</p>
+						<button ng-if="!spectacle.details" ng-click="getDetails(spectacle)">Voir les représentations</button>
+						<table class="representations-table">
+							<tr ng-repeat="representation in spectacle.details.representations | orderBy:'date'">
+								<td class="date">{{ representation.date | date:"EEEE" }}</td>
+								<td class="date">{{ representation.date | date:"d MMMM" }}</td>
+								<td class="date">{{ representation.date | date:"à H 'h' mm" }}</td>
+								<td class="pricedetail" ng-repeat="price in spectacle.prices_available">
+									<pricedetail prdet="getPriceDetail(representation, price)" url="representation.url"></pricedetail>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
