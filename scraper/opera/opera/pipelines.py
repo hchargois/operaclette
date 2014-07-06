@@ -1,6 +1,6 @@
 from opera import config, items
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class MongoPipeline(object):
     def open_spider(self, spider):
@@ -67,6 +67,11 @@ class MongoPipeline(object):
             spectacle["prices_available"] = sorted(list(prices_available))
             self.db.spectacles.save(spectacle)
 
+    def delete_old_entries(self):
+        one_hour_ago = datetime.now() - timedelta(hours=1)
+        self.db.representations.remove({"last_update": {"$lt": one_hour_ago}})
+        self.db.spectacles.remove({"last_update": {"$lt": one_hour_ago}})
+
     def process_item(self, item, spider):
         if isinstance(item, items.SpectacleItem):
             self.process_spectacle(item)
@@ -75,4 +80,5 @@ class MongoPipeline(object):
         return item
 
     def close_spider(self, spider):
+        self.delete_old_entries()
         self.consolidate_spectacles()
