@@ -26,15 +26,17 @@ class OperaSpider(Spider):
     start_urls = ["https://billetterie.operadeparis.fr/account"]
     disponibility_url = "https://www.operadeparis.fr/_secutix_greg_node_spectacle_dispos"
     spectacles_lists = {
-        "opera": "http://www.operadeparis.fr/saison-2013-2014/opera",
-        "ballet": "http://www.operadeparis.fr/saison-2013-2014/ballet",
+        "http://www.operadeparis.fr/saison-2013-2014/opera": "opera",
+        "http://www.operadeparis.fr/saison-2013-2014/ballet": "ballet",
+        "http://www.operadeparis.fr/saison-2014-2015/opera": "opera",
+        "http://www.operadeparis.fr/saison-2014-2015/ballet": "ballet",
     }
 
     def parse(self, response):
         return [FormRequest.from_response(response,
                             formdata={'login': secrets.OPERA_USER,
                                       'j_password': secrets.OPERA_PASSWORD,
-                                      'j_username': '441555335|ONP_INTERNET|' + secrets.OPERA_USER,
+                                      'j_username': '441555335|ONP_INTERNET|' + secrets.OPERA_USER + '|false|NO_IDENTIFICATION|NO_TOKEN',
                                      },
                             callback=self.after_login)]
 
@@ -43,13 +45,13 @@ class OperaSpider(Spider):
         sel = Selector(response)
         error_msg = sel.css("#error_message_container").extract()
         if error_msg:
-            self.log("Login failed", level=log.ERROR)
+            self.log("Login failed : " + error_msg[0], level=log.ERROR)
             return
         return [Request(self.disponibility_url, callback=self.parse_disponibility)]
 
     def parse_disponibility(self, response):
         self.disponibility = json.loads(response.body_as_unicode())
-        for stype, sl in self.spectacles_lists.items():
+        for sl, stype in self.spectacles_lists.items():
             req = Request(sl, callback=self.parse_spectacle_list)
             req.meta['stype'] = stype
             yield req
