@@ -31,7 +31,7 @@ class MongoPipeline(object):
     def process_repr(self, r):
         col = self.db.representations
         now = datetime.now()
-        spectacle = self.db.spectacles.find_one({"name":r["spectacle"]["name"]})
+        spectacle = self.db.spectacles.find_one({"name_id":r["spectacle"]["name_id"]})
         col.update(
             {"spectacle_id": spectacle["_id"], "date": r["date"]},
             {
