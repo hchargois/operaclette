@@ -46,7 +46,7 @@
 						<p ng-if="spectacle.prices_available.length == 0">Pas de places disponibles à la vente.</p>
 						<button ng-if="!spectacle.details" ng-click="getDetails(spectacle)">Voir les représentations</button>
 						<table class="representations-table">
-							<tr ng-repeat="representation in spectacle.details.representations | orderBy:'date'">
+							<tr class="weekday{{ representation.day_in_week }}" ng-repeat="representation in spectacle.details.representations | orderBy:'date'">
 								<td class="date">{{ representation.date | date:"EEEE" }}</td>
 								<td class="date">{{ representation.date | date:"d MMMM" }}</td>
 								<td class="date">{{ representation.date | date:"à H 'h' mm" }}</td>

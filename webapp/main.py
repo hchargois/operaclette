@@ -46,6 +46,7 @@ def details_json(name_id):
     for r in rs:
         del r['_id']
         del r['spectacle_id']
+        r['day_in_week'] = r['date'].isoweekday()
         r_res.append(r)
     del s['_id']
     result = {"details": {

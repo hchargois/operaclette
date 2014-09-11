@@ -7,3 +7,19 @@
 input[type=number] {
 	width: 5em;
 }
+
+.panel-body {
+	overflow-x: scroll;
+}
+
+td.date {
+	white-space: nowrap;
+}
+
+tr.weekday6 {
+	background: #ebf5ff;
+}
+
+tr.weekday7 {
+	background: #ffedf6;
+}
