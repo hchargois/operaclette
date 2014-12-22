@@ -77,6 +77,8 @@ class OperaSpider(Spider):
     def parse_spectacle_page(self, response):
         sel = Selector(response)
         name = sel.css('.H1.title').xpath('text()')[0].extract()
+        if name.isupper():
+            name = name.title()
         location = sel.css("span.lieux::text")[0].extract().strip()
         item = SpectacleItem()
         item["name"] = name
