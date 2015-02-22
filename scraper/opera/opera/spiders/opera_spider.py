@@ -35,8 +35,7 @@ class OperaSpider(Spider):
     def parse(self, response):
         return [FormRequest.from_response(response,
                             formdata={'login': secrets.OPERA_USER,
-                                      'j_password': secrets.OPERA_PASSWORD,
-                                      'j_username': '441555335|ONP_INTERNET|' + secrets.OPERA_USER + '|false|NO_IDENTIFICATION|NO_TOKEN',
+                                      'password': secrets.OPERA_PASSWORD,
                                      },
                             callback=self.after_login)]
 
